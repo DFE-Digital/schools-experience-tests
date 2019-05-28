@@ -1,19 +1,20 @@
 {
-    "baseUrl": "https://school-experience-staging.azurewebsites.net",
-    "env": {
-        "local": {
-            "url": "https://localhost:3000"
-        },
-        "staging": {
-            "url": "https://school-experience-staging.azurewebsites.net",
-            "username": "schoolStaging",
-            "password": "experienceStaging"
-        },
-        "RETRIES": 2
+  "baseUrl": "https://school-experience-staging.azurewebsites.net",
+  "env": {
+    "local": {
+      "url": "https://localhost:3000"
     },
-    "chromeWebSecurity": false,
-    "viewportWidth": 1440,
-    "viewportHeight": 900,
-    "requestTimeout": 30000,
-    "numTestsKeptInMemory": 10
+    "staging": {
+      "url": "https://school-experience-staging.azurewebsites.net",
+      "username": "schoolStaging",
+      "password": "experienceStaging"
+    },
+    "RETRIES": 2
+  },
+  "chromeWebSecurity": false,
+  "viewportWidth": 1440,
+  "viewportHeight": 900,
+  "requestTimeout": 30000,
+  "numTestsKeptInMemory": 10,
+  "projectId": "qq4u7r"
 }
