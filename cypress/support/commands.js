@@ -50,6 +50,16 @@ Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
     return originalFn(url, options)
 })
 
+Cypress.Commands.add('goToSearch', () => {
+    cy.visit('/candidates/school_searches/new', {
+        auth: {
+            username: "schoolStaging",
+            password: "experienceStaging"
+        }
+    })
+    cy.wait(2000)
+})
+
 Cypress.Commands.add('navigateToSchoolSearchPage', () => {
     cy.get('.govuk-header__container').should('be.visible')
     cy.get('.govuk-footer').should('be.visible')
