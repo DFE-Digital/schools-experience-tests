@@ -1,4 +1,4 @@
-# Malvern-Cypress-Framework
+# DfE-Cypress-Automation-Framework
 Front End automation collection using Cypress.io. This will be used for live journey checks and a regression pack for when deploying to staging.
 
 ## Concepts Included
