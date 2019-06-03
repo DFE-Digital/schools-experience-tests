@@ -88,6 +88,12 @@ Cypress.Commands.add('searchSchoolsByLocation', function () {
     cy.get('input[type="submit"]').click()
 })
 
+Cypress.Commands.add('enterPostcode', function (postcode) {
+    cy.get('#location')
+            .click()
+            .type(postcode)
+})
+
 Cypress.Commands.add('educationPhasesFiltering', () => {
     cy.get('#results').find('.govuk-heading-l')
         .first()
@@ -144,7 +150,7 @@ Cypress.Commands.add('checkResultsSorting', () => {
 Cypress.Commands.add('checkSchoolProfilePage', () => {
     cy.get('.govuk-heading-l').should('contain', 'Manchester Communication Academy')
     cy.get('#candidate-school-profile').should('be.visible')
-    cy.get('.govuk-button')
+    cy.get('.govuk-button').eq(0)
         .click()
         .wait(1000)
 })
@@ -177,7 +183,6 @@ Cypress.Commands.add('checkRequestExperiencePage', function () {
         .click()
         .wait(1000)
 })
-
 
 Cypress.Commands.add('contactDetailsError', function () {
     const contactErrorList = [
