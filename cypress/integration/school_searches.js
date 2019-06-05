@@ -37,27 +37,42 @@ describe('Check school searches functionality', function () {
     it('Find school using postcode within 5 miles', function () {
         cy.goToSearch()
         cy.enterPostcode('M1 2WD')
-        cy.get('#distance').select('5')
+        cy.get('#distance').select('10')
         cy.get('input[type="submit"]').click()
         cy.get('.govuk-heading-l')
             .eq(1)
             .should('contain', 'Manchester Communication Academy')
         cy.get('.govuk-heading-l')
             .eq(6)
-            .should('not.contain', 'Stanley Road Primary School')
-    })
-
-    it('Make sure same school 10 miles cannot be found if only 5 miles searched', function () {
-        cy.goToSearch()
-        cy.enterPostcode('M1 2WD')
-        cy.get('#distance').select('10')
-        cy.get('input[type="submit"]').click()
-        cy.get('.govuk-heading-l')
-            .eq(6)
             .should('contain', 'Stanley Road Primary School')
     })
 
-    it('Check school cannot be found if outside of mile radius', function () {
-        
+    it('Make sure same school 10 miles away cannot be found if only 5 miles searched', function () {
+        cy.goToSearch()
+        cy.enterPostcode('M1 2WD')
+        cy.get('#distance').select('5')
+        cy.get('input[type="submit"]').click()
+        cy.get('.govuk-heading-l')
+            .eq(6)
+            .should('not.contain', 'Stanley Road Primary School')
+    })
+
+    it('Use search then back button in browser and search again', function () {
+        cy.goToSearch()
+        cy.enterPostcode('M1 2WD')
+        cy.get('#distance').select('5')
+        cy.get('input[type="submit"]').click()
+        cy.get('.govuk-heading-l')
+            .eq(6)
+            .should('not.contain', 'Stanley Road Primary School')
+
+        cy.go('back')
+        cy.searchSchoolsByLocation()
+        cy.get('.govuk-heading-l')
+            .eq(1)
+            .should('contain', 'Manchester Communication Academy')
+        cy.get('.govuk-heading-l')
+            .eq(6)
+            .should('contain', 'Stanley Road Primary School')
     })
 })
