@@ -132,7 +132,6 @@ Cypress.Commands.add('subjectFiltering', () => {
         .uncheck()
         .wait(1000)
     cy.get('@results').should('contain', 'Manchester Communication Academy')
-
 })
 
 Cypress.Commands.add('checkResultsSorting', () => {
@@ -413,7 +412,6 @@ Cypress.Commands.add('applicationReviewContinue', () => {
     cy.get('input[type="submit"]')
         .click()
         .wait(1000)
-    
 })
 
 Cypress.Commands.add('confirmEmailPage', function () {
@@ -425,7 +423,10 @@ Cypress.Commands.add('confirmEmailPage', function () {
 
 Cypress.Commands.add('reviewApplicationAnswers', function () {
     // change name
-    cy.get('.govuk-summary-list__actions').eq(0)
+    cy.get('.govuk-summary-list__actions a').as('changeLink')
+    
+    cy.get('@changeLink')
+        .eq(0)
         .click()
         .wait(1000)
     cy.get('#candidates_registrations_personal_information_first_name')
@@ -436,7 +437,8 @@ Cypress.Commands.add('reviewApplicationAnswers', function () {
         .wait(1000)
     
     // change address
-    cy.get('.govuk-summary-list__actions').eq(2)
+    cy.get('@changeLink')
+        .eq(2)
         .click()
     cy.get('#candidates_registrations_contact_information_building')
         .clear()    
@@ -449,11 +451,11 @@ Cypress.Commands.add('reviewApplicationAnswers', function () {
         .wait(1000)
     
     // change teaching subject
-    cy.get('.govuk-summary-list__actions').eq(10)
+    cy.get('@changeLink')
+        .eq(10)
         .click()   
     cy.get('#candidates_registrations_teaching_preference_subject_first_choice')
-        .clear()
-        .select('Classics')
+        .select('Biology')
     cy.get('input[type="submit"]')
         .click()
         .wait(1000)

@@ -21,8 +21,8 @@ describe('application review page', function () {
         cy.dbsCheckContinue()
 
         // Check review page
-        // cy.applicationReviewContinue()
-
         cy.reviewApplicationAnswers()
+        cy.applicationReviewContinue()
+        cy.confirmEmailPage()
     })
 })
