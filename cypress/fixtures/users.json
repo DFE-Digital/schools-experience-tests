@@ -1,10 +1,17 @@
 [
   {
     "id": 1,
-    "name": "Testy McTesterson",
+    "fullName": "Testy McTesterson",
+    "firstName": "Testy",
+    "lastName": "McTesterson",
     "fullAddress": "12 Grasmere Road, Manchester, Cheshire, SK8 4TR",
     "number": "01611234567",
-    "email": "test@testemail.com",
+    "email": "automationtests@test.com",
+    "dob": {
+      "day": "10",
+      "month": "10",
+      "year": "1988"
+    },
     "address": {
       "street": "12 Grasmere Road",
       "city": "Manchester",

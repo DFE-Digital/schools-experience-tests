@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "cypress": "^3.2.0"
+    "cypress": "^3.4.0"
   },
   "dependencies": {
     "cypress-plugin-retries": "^1.2.0"

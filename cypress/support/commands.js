@@ -66,7 +66,7 @@ Cypress.Commands.add('navigateToSchoolSearchPage', () => {
     cy.get('.govuk-button').click()
     cy.get('.govuk-se-masthead').should('be.visible')
     cy.get('.govuk-button').click()
-    cy.get('.govuk-fieldset__heading').should('contain', 'Find school experience')
+    cy.get('.govuk-heading-l').should('contain', 'Search for school experience')
 })
 
 Cypress.Commands.add('searchSchoolsByLocation', function () {
@@ -87,6 +87,14 @@ Cypress.Commands.add('searchSchoolsByLocation', function () {
     cy.get('#distance').select('10')
     cy.get('input[type="submit"]').click()
 })
+
+ Cypress.Commands.add('searchPhase2Location', function () {
+    cy.get('#location')
+        .click()
+        .type(this.user[0].address.city)
+    cy.get('#distance').select('10')
+    cy.get('input[type="submit"]').click()
+ })
 
 Cypress.Commands.add('enterPostcode', function (postcode) {
     cy.get('#location')
@@ -129,22 +137,25 @@ Cypress.Commands.add('subjectFiltering', () => {
 
 Cypress.Commands.add('checkResultsSorting', () => {
     cy.get('#_order_container')
-        .find('#order')
+        .find('#order_name')
         .as('order')
     cy.get('@order')
-        .select('name')
+        .check('name')
         .wait(1000)
     cy.get('@results').should('contain', 'Altrincham Grammar School for Girls')
-    cy.get('@order')
-        .select('distance')
+    cy.get('#order_distance')
+        .check('distance')
         .wait(1000)
-    cy.get('@results').should('contain', 'Manchester Communication Academy')   
-    // click to view school details     
+    cy.get('@results').should('contain', 'Manchester Communication Academy')       
+})
+
+Cypress.Commands.add('clickFirstResult', () => {
+    // click to view school details 
     cy.get('#results')
-        .find('.govuk-button')
-        .first()
-        .click()
-        .wait(1000)
+    .find('.govuk-button')
+    .first()
+    .click()
+    .wait(1000)
 })
 
 Cypress.Commands.add('checkSchoolProfilePage', () => {
@@ -184,11 +195,48 @@ Cypress.Commands.add('checkRequestExperiencePage', function () {
         .wait(1000)
 })
 
+Cypress.Commands.add('personalDetailsError', function () {
+    const contactErrorList = [
+        'Enter your first name',
+        'Enter your last name',
+        'Enter your email address',
+        'Enter your date of birth'
+    ]
+
+    cy.get('input[type="submit"]')
+        .click()
+        .wait(1000)
+    cy.get('#error-summary-title').should('be.visible')
+        .and('contain', 'There is a problem')
+    cy.get('ul.govuk-error-summary__list>li').each(($el, i) => {
+        expect($el.get(0).innerText).to.contain(contactErrorList[i])
+    })
+})
+
+Cypress.Commands.add('fillPersonalDetails', function () {
+    cy.get('#main-content').should('be.visible')
+    cy.get('.govuk-heading-l').should('contain', 'Check if we already have your details')
+    cy.get('#candidates_registrations_personal_information_first_name')
+        .type(this.user[0].firstName)
+    cy.get('#candidates_registrations_personal_information_last_name')
+        .type(this.user[0].lastName)
+    cy.get('#candidates_registrations_personal_information_email')
+        .type(this.user[0].email)
+    cy.get('#candidates_registrations_personal_information_date_of_birth_3i')
+        .type(this.user[0].dob.day)
+    cy.get('#candidates_registrations_personal_information_date_of_birth_2i')
+        .type(this.user[0].dob.month)
+    cy.get('#candidates_registrations_personal_information_date_of_birth_1i')
+        .type(this.user[0].dob.year)
+
+    cy.get('input[type="submit"]')
+        .click()
+        .wait(1000)
+})
+
 Cypress.Commands.add('contactDetailsError', function () {
     const contactErrorList = [
-        'Enter your full name',
         'Enter your telephone number',
-        'Enter your email address',
         'Enter your building',
         'Enter your postcode'
     ]
@@ -206,12 +254,8 @@ Cypress.Commands.add('contactDetailsError', function () {
 Cypress.Commands.add('fillContactDetails', function () {
     cy.get('#main-content').should('be.visible')
     cy.get('.govuk-heading-l').should('contain', 'Enter your contact details')
-    cy.get('#candidates_registrations_contact_information_full_name')
-        .type(this.user[0].name)
     cy.get('#candidates_registrations_contact_information_phone')
         .type(this.user[0].number)
-    cy.get('#candidates_registrations_contact_information_email')
-        .type(this.user[0].email)
     cy.get('#candidates_registrations_contact_information_building')
         .type(this.user[0].address.street)
     cy.get('#candidates_registrations_contact_information_town_or_city')
@@ -220,6 +264,7 @@ Cypress.Commands.add('fillContactDetails', function () {
         .type(this.user[0].address.county)
     cy.get('#candidates_registrations_contact_information_postcode')
         .type(this.user[0].address.postcode)
+
     cy.get('input[type="submit"]')
         .click()
         .wait(1000)
@@ -233,8 +278,6 @@ Cypress.Commands.add('subjectsErrors', function () {
 
     const subjectErrorList = [
         'Select a degree stage',
-        'Select a subject',
-        'Select a teaching stage',
         'Select a subject'
     ]
 
@@ -250,19 +293,76 @@ Cypress.Commands.add('subjectsErrors', function () {
 
 Cypress.Commands.add('chooseSubjects', function () {
     // choose subjects details
-    cy.get('#candidates_registrations_subject_preference_degree_stage_final_year')
+    cy.get('#candidates_registrations_education_degree_stage_final_year')
         .check()
-    cy.get('#candidates_registrations_subject_preference_degree_subject')
+    cy.get('#candidates_registrations_education_degree_subject')
         .select(this.user[0].subjects.studied)
-    cy.get('#candidates_registrations_subject_preference_teaching_stage_im_very_sure_and_think_ill_apply')
+    cy.get('input[type="submit"]')
+        .click()
+        .wait(1000)
+})
+
+Cypress.Commands.add('teachingPreferenceErrors', function () {
+    // candidate subject page
+    // assert against error when no subjects are chosen
+    cy.get('#main-content').should('be.visible')
+    cy.get('.govuk-fieldset__heading').eq(0).should('contain', 'Which of the following teaching stages are you at?')
+
+    const subjectErrorList = [
+        'Select a teaching stage',
+        'Select a subject'
+    ]
+
+    cy.get('input[type="submit"]')
+        .click()
+        .wait(1000)
+    cy.get('#error-summary-title').should('be.visible')
+        .and('contain', 'There is a problem')
+    cy.get('ul.govuk-error-summary__list>li').each(($el, i) => {
+        expect($el.get(0).innerText).to.contain(subjectErrorList[i])
+    })
+})
+
+Cypress.Commands.add('chooseTeachingPreference', function () {
+    // choose subjects details
+    cy.get('#candidates_registrations_teaching_preference_teaching_stage_im_very_sure_and_think_ill_apply')
         .check()
-    cy.get('#candidates_registrations_subject_preference_subject_first_choice')
+    cy.get('#candidates_registrations_teaching_preference_subject_first_choice')
         .select(this.user[0].subjects.firstChoice)
-    cy.get('#candidates_registrations_subject_preference_subject_second_choice')
+    cy.get('#candidates_registrations_teaching_preference_subject_second_choice')
         .select(this.user[0].subjects.secondChoice)
     cy.get('input[type="submit"]')
         .click()
         .wait(1000)
+})
+
+Cypress.Commands.add('placementPreferenceErrors', function () {
+    cy.get('#main-content').should('be.visible')
+    cy.get('.govuk-heading-l').should('contain', 'Request school experience')
+
+    const placementErrorList = [
+        'Enter your availability',
+        'Enter what you want to get out of a placement'
+    ]
+
+    cy.get('input[type="submit"]')
+        .click()
+        .wait(1000)
+    cy.get('#error-summary-title').should('be.visible')
+        .and('contain', 'There is a problem')
+    cy.get('ul.govuk-error-summary__list>li').each(($el, i) => {
+        expect($el.get(0).innerText).to.contain(placementErrorList[i])
+    })
+})
+
+Cypress.Commands.add('choosePlacementPreference', function () {
+    cy.get('#candidates_registrations_placement_preference_availability')
+    .type(this.user[0].availability)
+    cy.get('#candidates_registrations_placement_preference_objectives')
+    .type(this.user[0].reason)
+    cy.get('input[type="submit"]')
+    .click()
+    .wait(1000)
 })
 
 Cypress.Commands.add('dbsErrorCheck', () => {
@@ -276,7 +376,7 @@ Cypress.Commands.add('dbsErrorCheck', () => {
 })
 
 Cypress.Commands.add('dbsCheckContinue', () => {
-    cy.get('#candidates_registrations_background_check_has_dbs_check_true').click()
+    cy.get('#candidates_registrations_background_check_has_dbs_check_true').check()
     cy.get('input[type="submit"]')
         .click()
         .wait(1000)
@@ -284,8 +384,10 @@ Cypress.Commands.add('dbsCheckContinue', () => {
 
 Cypress.Commands.add('applicationReviewErrors', function () {
     // application review page
+    let dateOfBirth = `${this.user[0].dob.day}/${this.user[0].dob.month}/${this.user[0].dob.year}`
     const inputFieldsList = [
-        this.user[0].name,
+        this.user[0].fullName,
+        dateOfBirth,
         this.user[0].fullAddress,
         this.user[0].number,
         this.user[0].email,
@@ -319,4 +421,40 @@ Cypress.Commands.add('confirmEmailPage', function () {
         .eq(0)
         .should('contain', this.user[0].email)
     cy.get('input[type="submit"]').should('be.visible')
+})
+
+Cypress.Commands.add('reviewApplicationAnswers', function () {
+    // change name
+    cy.get('.govuk-summary-list__actions').eq(0)
+        .click()
+        .wait(1000)
+    cy.get('#candidates_registrations_personal_information_first_name')
+        .clear()
+        .type('Newman')
+    cy.get('input[type="submit"]')
+        .click()
+        .wait(1000)
+    
+    // change address
+    cy.get('.govuk-summary-list__actions').eq(2)
+        .click()
+    cy.get('#candidates_registrations_contact_information_building')
+        .clear()    
+        .type('200 loweswater Road')
+    cy.get('#candidates_registrations_contact_information_postcode')
+        .clear()    
+        .type('SK8 4PE')
+    cy.get('input[type="submit"]')
+        .click()
+        .wait(1000)
+    
+    // change teaching subject
+    cy.get('.govuk-summary-list__actions').eq(10)
+        .click()   
+    cy.get('#candidates_registrations_teaching_preference_subject_first_choice')
+        .clear()
+        .select('Classics')
+    cy.get('input[type="submit"]')
+        .click()
+        .wait(1000)
 })

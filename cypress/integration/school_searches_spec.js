@@ -10,7 +10,8 @@ describe('Check school searches functionality', function () {
 
     it('Search using location services', function () {
         cy.goToSearch()
-        cy.searchSchoolsByLocation()
+        // cy.searchSchoolsByLocation()
+        cy.searchPhase2Location()
 
         // results filtering & sorting
         cy.educationPhasesFiltering()
@@ -67,7 +68,8 @@ describe('Check school searches functionality', function () {
             .should('not.contain', 'Stanley Road Primary School')
 
         cy.go('back')
-        cy.searchSchoolsByLocation()
+        // cy.searchSchoolsByLocation()
+        cy.searchPhase2Location()
         cy.get('.govuk-heading-l')
             .eq(1)
             .should('contain', 'Manchester Communication Academy')
