@@ -98,8 +98,8 @@ Cypress.Commands.add('searchSchoolsByLocation', function () {
 
 Cypress.Commands.add('enterPostcode', function (postcode) {
     cy.get('#location')
-            .click()
-            .type(postcode)
+        .click()
+        .type(postcode)
 })
 
 Cypress.Commands.add('educationPhasesFiltering', () => {
@@ -152,10 +152,10 @@ Cypress.Commands.add('checkResultsSorting', () => {
 Cypress.Commands.add('clickFirstResult', () => {
     // click to view school details 
     cy.get('#results')
-    .find('.govuk-button')
-    .first()
-    .click()
-    .wait(1000)
+        .find('.govuk-button')
+        .first()
+        .click()
+        .wait(1000)
 })
 
 Cypress.Commands.add('checkSchoolProfilePage', () => {
@@ -357,12 +357,12 @@ Cypress.Commands.add('placementPreferenceErrors', function () {
 
 Cypress.Commands.add('choosePlacementPreference', function () {
     cy.get('#candidates_registrations_placement_preference_availability')
-    .type(this.user[0].availability)
+        .type(this.user[0].availability)
     cy.get('#candidates_registrations_placement_preference_objectives')
-    .type(this.user[0].reason)
+        .type(this.user[0].reason)
     cy.get('input[type="submit"]')
-    .click()
-    .wait(1000)
+        .click()
+        .wait(1000)
 })
 
 Cypress.Commands.add('dbsErrorCheck', () => {
