@@ -65,6 +65,8 @@ Cypress.Commands.add('navigateToSchoolSearchPage', () => {
     cy.get('.govuk-footer').should('be.visible')
     cy.get('.govuk-button').click()
     cy.get('.govuk-heading-l').should('contain', 'Search for school experience')
+        cy.wait(1000)
+
 })
 
 Cypress.Commands.add('searchSchoolsByLocation', function () {
