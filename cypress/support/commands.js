@@ -435,6 +435,9 @@ Cypress.Commands.add('reviewApplicationAnswers', function () {
     cy.get('input[type="submit"]')
         .click()
         .wait(1000)
+    cy.get('.govuk-summary-list__value')
+        .eq(0)  
+        .should('contain', 'Newman McTesterson')
     
     // change address
     cy.get('@changeLink')
@@ -449,7 +452,10 @@ Cypress.Commands.add('reviewApplicationAnswers', function () {
     cy.get('input[type="submit"]')
         .click()
         .wait(1000)
-    
+    cy.get('.govuk-summary-list__value')
+        .eq(2)  
+        .should('contain', '200 loweswater Road')
+
     // change teaching subject
     cy.get('@changeLink')
         .eq(10)
@@ -459,4 +465,20 @@ Cypress.Commands.add('reviewApplicationAnswers', function () {
     cy.get('input[type="submit"]')
         .click()
         .wait(1000)
+    cy.get('.govuk-summary-list__value')
+        .eq(11)  
+        .should('contain', 'Biology')
+
+    // change DBS check
+    cy.get('@changeLink')
+        .eq(12)
+        .click()   
+    cy.get('#candidates_registrations_background_check_has_dbs_check_false')
+        .check()
+    cy.get('input[type="submit"]')
+        .click()
+        .wait(1000)
+    cy.get('.govuk-summary-list__value')
+        .eq(13)  
+        .should('contain', 'No')
 })
